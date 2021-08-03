@@ -11,7 +11,9 @@ def calculateError(dataSet,f,grid,alpha,error):
     opEval = createOperationEval(grid)
     for i in range(dataSet.getNrows()):
         dataSet.getRow(i,vec)
-        error[i] = pow(f(dataSet.get(i,0),dataSet.get(i,1))-opEval.eval(alpha,vec),2)
+        error[i] = pow(
+            f(dataSet.get(i,0),dataSet.get(i,1))-opEval.eval(alpha,vec),
+            2)
     return error
 
 if __name__ == '__main__':
@@ -58,8 +60,9 @@ if __name__ == '__main__':
             refinement = ANOVAHashRefinement()
             decorator = PredictiveRefinement(refinement)
             # refine a single grid point each time
-            print("Error over all = %s" % errorVector.sum())
-            indicator = PredictiveRefinementIndicator(grid,dataSet,errorVector,1)
+            print(f"Error over all = {errorVector.sum():.3f}" )
+            indicator = PredictiveRefinementIndicator(
+                grid,dataSet,errorVector,1)
             decorator.free_refine(HashGridStorage,indicator)
             print("Refinement step %d, new grid size: %d" % (refnum+1, HashGridStorage.getSize()))
             # extend alpha vector (new entries uninitialized)
