@@ -1,5 +1,5 @@
-    """TO-DO: Rewrite code without Parameterbuilder
-    """
+"""TO-DO: Rewrite code without Parameterbuilder
+"""
 
 from argparse import ArgumentParser
 from pysgpp.extensions.datadriven.uq.parameters.ParameterBuilder import ParameterBuilder
