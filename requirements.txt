@@ -1,5 +1,4 @@
 requests
 matplotlib
-pysgpp
 chaospy
-scikit-learn
+sparseSpACE

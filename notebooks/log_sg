@@ -1,0 +1,26 @@
+13:17:38,630 util INFO :: StandardCombi ## Time used (s):1.215720805000018
+13:17:38,630 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 113
+13:17:38,630 util INFO :: StandardCombi ## Analytic Solution: 0.16666666666666663 
+13:17:38,630 util INFO :: StandardCombi ## Difference 3.848557324429014e-05: 
+13:27:47,486 util INFO :: StandardCombi ## Time used (s):1.20160518900002
+13:27:47,486 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 113
+13:27:47,487 util INFO :: StandardCombi ## Analytic Solution: 0.16666666666666663 
+13:27:47,487 util INFO :: StandardCombi ## Difference 1.0457707994016019e-07: 
+18:41:44,733 util INFO :: StandardCombi ## Time used (s):0.12653688200225588
+18:41:44,733 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 95
+18:43:49,742 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Current number of function evaluations 7
+18:43:49,743 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Current error: 0.16991897399165706
+18:43:49,744 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Finished refinement
+18:43:49,745 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Refined 8 times
+18:43:49,767 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Current number of function evaluations 29
+18:43:49,769 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Current error: 0.024690254869884992
+18:43:49,770 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Number of refinements: 8
+18:43:49,770 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Number of distinct points used during the refinement: 29
+18:43:49,771 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Time used adaptive (s): 0.035446410001895856
+18:43:49,772 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Final error: 0.024690254869884992
+17:20:18,992 util INFO :: StandardCombi ## Time used (s):0.05841830599996456
+17:20:18,993 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 95
+19:58:41,316 util INFO :: StandardCombi ## Time used (s):0.04726194900285918
+19:58:41,317 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 95
+20:00:40,55 util INFO :: StandardCombi ## Time used (s):0.044948444003239274
+20:00:40,55 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 95
