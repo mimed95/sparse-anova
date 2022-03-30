@@ -3,7 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import pysgpp
-#from pysgpp.pysgpp_swig import DataVector, CombigridOperation
+
+# from pysgpp.pysgpp_swig import DataVector, CombigridOperation
 from pysgpp.extensions.datadriven.uq.dists import J, Beta, Uniform, Normal
 
 from pysgpp.extensions.datadriven.uq.plot.plot2d import plotDensity2d
@@ -11,6 +12,8 @@ from pysgpp.extensions.datadriven.uq.plot.plot2d import plotDensity2d
 
 def g(x):
     return np.prod([4 * xi * (1 - xi) for xi in x.array()])
+
+
 # We have to wrap f in a pysgpp.MultiFunction object.
 func = pysgpp.multiFunc(g)
 numDims = 2
@@ -18,10 +21,12 @@ numDims = 2
 
 if __name__ == "__main__":
     # parse the input arguments
-    parser = ArgumentParser(description='Get a program and run it with input')
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
-    parser.add_argument('--level', default=2, type=int, help="minimum level of regular grids")
-    parser.add_argument('--marginalType', default="beta", type=str, help="marginals")
+    parser = ArgumentParser(description="Get a program and run it with input")
+    parser.add_argument("--version", action="version", version="%(prog)s 1.0")
+    parser.add_argument(
+        "--level", default=2, type=int, help="minimum level of regular grids"
+    )
+    parser.add_argument("--marginalType", default="beta", type=str, help="marginals")
     args = parser.parse_args()
     if args.marginalType == "uniform":
         marginal = Uniform(0, 1)
@@ -50,15 +55,19 @@ if __name__ == "__main__":
     levelManager.addRegularLevels(args.level)
     # We can also fetch the used grid points and plot the grid:
     grid = levelManager.getGridPointMatrix()
-    gridList = [[grid.get(r, c) for c in range(grid.getNcols())] for r in range(grid.getNrows())]
+    gridList = [
+        [grid.get(r, c) for c in range(grid.getNcols())] for r in range(grid.getNrows())
+    ]
     fig = plt.figure()
     plt.plot(
         gridList[0],
-        gridList[1], " ",
-        #color=load_color(0),
-        marker='o', markersize=10
+        gridList[1],
+        " ",
+        # color=load_color(0),
+        marker="o",
+        markersize=10,
     )
-    plt.axis('off')
+    plt.axis("off")
     currentAxis = plt.gca()
     currentAxis.add_patch(Rectangle((0, 0), 1, 1, fill=None, alpha=1, linewidth=2))
     plt.xlim(0, 1)

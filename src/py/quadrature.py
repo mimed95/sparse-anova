@@ -1,20 +1,24 @@
 import pysgpp
+import numpy as np
+
 # the standard parabola (arbitrary-dimensional)
 
 
 def f(x):
-  res = 1.0
-  for i in range(len(x)):
-      res *= 4.0*x[i]*(1.0-x[i])
-  return res
+    ar_x = np.array(x)
+    res = np.prod(4.0*ar_x*(1.0-ar_x))
+    return res
+
+
 # a pyramid-like shape (arbitrary-dimensional)
 def g(x):
-  res = 1.0
-  for i in range(len(x)):
-      res *= 2.0*min(x[i], 1.0-x[i])
-  return res
+    res = 1.0
+    for i in range(len(x)):
+        res *= 2.0 * min(x[i], 1.0 - x[i])
+    return res
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     dim = 2
     grid = pysgpp.Grid.createLinearGrid(dim)
     gridStorage = grid.getStorage()
@@ -28,11 +32,11 @@ if __name__ == '__main__':
     # create coefficient vector
     alpha = pysgpp.DataVector(gridStorage.getSize())
     for i in range(gridStorage.getSize()):
-      gp = gridStorage.getPoint(i)
-      p = tuple([gp.getStandardCoordinate(j) for j in range(dim)])
-      alpha[i] = f(p)
+        gp = gridStorage.getPoint(i)
+        p = tuple([gp.getStandardCoordinate(j) for j in range(dim)])
+        alpha[i] = f(p)
     pysgpp.createOperationHierarchisation(grid).doHierarchisation(alpha)
-
+    pysgpp.VectorFunction
     # direct quadrature
     opQ = pysgpp.createOperationQuadrature(grid)
     res = opQ.doQuadrature(alpha)
@@ -51,8 +55,7 @@ if __name__ == '__main__':
     print("MC L2-error (f-u)      {:.7f}".format(res))
     # Monte Carlo quadrature of a piramidal function
     res = opMC.doQuadratureFunc(g)
-    print( "MC value (g):          {:.6f}".format(res))
+    print("MC value (g):          {:.6f}".format(res))
     # Monte Carlo quadrature of error
     res = opMC.doQuadratureL2Error(g, alpha)
-    print( "MC L2-error (g-u)      {:.7f}".format(res))
-    
+    print("MC L2-error (g-u)      {:.7f}".format(res))

@@ -1,11 +1,21 @@
 import numpy as np
 from argparse import ArgumentParser
 import matplotlib.pyplot as plt
-from pysgpp import multiFunc, DataVector, \
-    CombigridMultiOperation, DataMatrix, SurplusRefinementFunctor, \
-    Grid, convertCombigridToHierarchicalSparseGrid, convertHierarchicalSparseGridToCombigrid, \
-    GridConversionTypes_ALLSUBSPACES, GridConversionTypes_COMPLETESUBSPACES, \
-    createOperationHierarchisation, createOperationMultipleEval
+from pysgpp import (
+    multiFunc,
+    DataVector,
+    CombigridMultiOperation,
+    DataMatrix,
+    SurplusRefinementFunctor,
+    Grid,
+    convertCombigridToHierarchicalSparseGrid,
+    convertHierarchicalSparseGridToCombigrid,
+    GridConversionTypes_ALLSUBSPACES,
+    GridConversionTypes_COMPLETESUBSPACES,
+    createOperationHierarchisation,
+    createOperationMultipleEval,
+)
+
 
 def f(x):
     return np.prod([4 * xi * (1 - xi) for xi in x.array()])
@@ -58,12 +68,9 @@ def refineGrid(grid, alpha, f, refnums):
         createOperationHierarchisation(grid).doHierarchisation(alpha)
 
 
-def regularGridToRegularGrid(numDims,
-                             level,
-                             f,
-                             numSamples=1000,
-                             plot=False,
-                             verbose=False):
+def regularGridToRegularGrid(
+    numDims, level, f, numSamples=1000, plot=False, verbose=False
+):
     """
     Converts a regular sparse grid function to a sparse grid in the
     combination technique and back.
@@ -82,12 +89,16 @@ def regularGridToRegularGrid(numDims,
     grid.getGenerator().regular(level)
     alpha = interpolate(grid, f)
     treeStorage_all = convertHierarchicalSparseGridToCombigrid(
-        grid.getStorage(), GridConversionTypes_ALLSUBSPACES)
+        grid.getStorage(), GridConversionTypes_ALLSUBSPACES
+    )
     treeStorage_complete = convertHierarchicalSparseGridToCombigrid(
-        grid.getStorage(), GridConversionTypes_COMPLETESUBSPACES)
+        grid.getStorage(), GridConversionTypes_COMPLETESUBSPACES
+    )
     func = multiFunc(f)
     opt_all = CombigridMultiOperation.createExpUniformLinearInterpolation(numDims, func)
-    opt_complete = CombigridMultiOperation.createExpUniformLinearInterpolation(numDims, func)
+    opt_complete = CombigridMultiOperation.createExpUniformLinearInterpolation(
+        numDims, func
+    )
     parameters.transpose()
     opt_all.setParameters(parameters)
     opt_all.getLevelManager().addLevelsFromStructure(treeStorage_all)
@@ -102,10 +113,12 @@ def regularGridToRegularGrid(numDims,
         print("all levels:")
         print(opt_all.getLevelManager().getSerializedLevelStructure())
         print("-" * 80)
-    
+
     grid_complete = Grid.createLinearGrid(numDims)
     treeStorage_complete = opt_complete.getLevelManager().getLevelStructure()
-    convertCombigridToHierarchicalSparseGrid(treeStorage_complete, grid_complete.getStorage())
+    convertCombigridToHierarchicalSparseGrid(
+        treeStorage_complete, grid_complete.getStorage()
+    )
 
     grid_all = Grid.createLinearGrid(numDims)
     treeStorage_all = opt_all.getLevelManager().getLevelStructure()
@@ -118,7 +131,9 @@ def regularGridToRegularGrid(numDims,
     y_sg_all = DataVector(numSamples)
     createOperationMultipleEval(grid_all, parameters).eval(alpha_all, y_sg_all)
     y_sg_complete = DataVector(numSamples)
-    createOperationMultipleEval(grid_complete, parameters).eval(alpha_complete, y_sg_complete)
+    createOperationMultipleEval(grid_complete, parameters).eval(
+        alpha_complete, y_sg_complete
+    )
     y_ct_all = opt_all.getResult()
     y_ct_complete = opt_complete.getResult()
 
@@ -138,7 +153,7 @@ def regularGridToRegularGrid(numDims,
         plt.plot(x[ixs], y_ct_all[ixs], label="ct all")
         plt.legend()
         plt.show()
-# running checks
+    # running checks
     assert np.sum((y_ct_complete - y_ct_all) ** 2) < 1e-14
     assert np.sum((y_ct_complete - y_sg_regular) ** 2) < 1e-14
     assert np.sum((y_sg_regular - y_sg_all) ** 2) < 1e-14
@@ -148,27 +163,24 @@ def regularGridToRegularGrid(numDims,
     assert grid_all.getSize() == grid.getSize()
 
 
-if __name__ == '__main__':
-    parser = ArgumentParser(description='Get a program and run it with input')
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
-    parser.add_argument('--numDims', default=4, type=int,
-                        help='number of dimensions')
-    parser.add_argument('--level', default=4, type=int,
-                        help='sparse grid level')
-    parser.add_argument('--refnums', default=0, type=int,
-                        help='number of refinement steps')
-    parser.add_argument('--plot', default=False, action='store_true',
-                        help='plot stuff')
-    parser.add_argument('--verbose', default=False, action='store_true',
-                        help='verbosity')
+if __name__ == "__main__":
+    parser = ArgumentParser(description="Get a program and run it with input")
+    parser.add_argument("--version", action="version", version="%(prog)s 1.0")
+    parser.add_argument("--numDims", default=4, type=int, help="number of dimensions")
+    parser.add_argument("--level", default=4, type=int, help="sparse grid level")
+    parser.add_argument(
+        "--refnums", default=0, type=int, help="number of refinement steps"
+    )
+    parser.add_argument("--plot", default=False, action="store_true", help="plot stuff")
+    parser.add_argument(
+        "--verbose", default=False, action="store_true", help="verbosity"
+    )
     args = parser.parse_args()
     # select the right conversion method based on the input parameters
     if args.refnums == 0:
-        regularGridToRegularGrid(args.numDims,
-                                 args.level,
-                                 f,
-                                 plot=args.plot,
-                                 verbose=args.verbose)
+        regularGridToRegularGrid(
+            args.numDims, args.level, f, plot=args.plot, verbose=args.verbose
+        )
 #    else:
 #        adaptiveGridToRegularGrid(args.numDims,
 #                                  args.level,
@@ -177,4 +189,4 @@ if __name__ == '__main__':
 #                                  plot=args.plot,
 #                                  verbose=args.verbose)
 
-#details on https://sgpp.sparsegrids.org/docs/example_gridConverter_py.html
+# details on https://sgpp.sparsegrids.org/docs/example_gridConverter_py.html
