@@ -1,5 +1,5 @@
 /.vscode
 /tntorch
 /venv
-
+notebooks/log_sg
 *.pyc
