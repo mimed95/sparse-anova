@@ -1,5 +1,5 @@
 import logging
-from typing import Callable
+from typing import Callable, Iterable
 
 from configuration.config import settings
 import numpy as np
@@ -43,9 +43,9 @@ class IntegrationTestFunctions:
         """
         using u = (0.5,..,0.5), a_i=5
         """
-        try:
+        if isinstance(self.u, Iterable):
             u1 = self.u[0]
-        except IndexError:
+        else:
             u1 = self.u
         return np.cos(u1*2*np.pi+self.a*np.sum([x[i] for i in range(len(x))]))
 
@@ -88,9 +88,10 @@ def hierarchise(func: Callable, dim: int, level: int):
 
 if __name__ == "__main__":
     Fs = IntegrationTestFunctions()
+    func = Fs.cont_f
     dim = 3
     level = 5
-    grid, alpha = hierarchise(Fs.cont_f, dim, level)
+    grid, alpha = hierarchise(func, dim, level)
     # direct quadrature
     opQ = sg.createOperationQuadrature(grid)
     sg_res = opQ.doQuadrature(alpha)
@@ -99,10 +100,10 @@ if __name__ == "__main__":
     res = opMC.doQuadrature(alpha)
     logging.info("Monte Carlo value:     {:.6f}".format(res))
     # Monte Carlo quadrature of a standard parabola
-    res = opMC.doQuadratureFunc(Fs.cont_f)
+    res = opMC.doQuadratureFunc(func)
     logging.info("MC value (f):          {:.6f}".format(res))
     # Monte Carlo quadrature of error
-    res = opMC.doQuadratureL2Error(Fs.cont_f, alpha)
+    res = opMC.doQuadratureL2Error(func, alpha)
     logging.info("MC L2-error (f-u)      {:.7f}".format(res))
     if dim == 2:
         exact_resf1 = settings.results2d.continous # in d=2
