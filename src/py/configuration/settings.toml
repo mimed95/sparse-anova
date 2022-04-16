@@ -2,14 +2,14 @@
 continous = 0.13481087196
 cornerpeak = 0.19502937480
 gausspeak = 0.12556144876
-oscillatory = 0
-productpeak = 0
-discontinous = 0
+oscillatory = 0.0549531
+productpeak = 141.679016
+discontinous = 5.00193
 
 [results3d]
 continous = 0.049498
 cornerpeak = 8.5
 gausspeak = 0.0444923
-oscillatory = 0
-productpeak = 0
-discontinous = 0
+oscillatory = -0.0128681
+productpeak = 1686.391093
+discontinous = 147.47
