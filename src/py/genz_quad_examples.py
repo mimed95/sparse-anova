@@ -1,5 +1,7 @@
 import logging
 from typing import Callable
+
+from configuration.config import settings
 import numpy as np
 import pysgpp as sg
 
@@ -103,9 +105,9 @@ if __name__ == "__main__":
     res = opMC.doQuadratureL2Error(Fs.cont_f, alpha)
     logging.info("MC L2-error (f-u)      {:.7f}".format(res))
     if dim == 2:
-        exact_resf1 = (4*(np.exp(2.5)-1)**2)/(25*np.exp(5)) # in d=2
+        exact_resf1 = settings.results2d.continous # in d=2
     elif dim == 3:
-        exact_resf1 = 0.049498 # in d=3
+        exact_resf1 = settings.results3d.continous # in d=3
     else:
         pass
     logging.info(f"integral value:  {sg_res:.6f}")
