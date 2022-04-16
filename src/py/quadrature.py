@@ -36,7 +36,6 @@ if __name__ == "__main__":
         p = tuple([gp.getStandardCoordinate(j) for j in range(dim)])
         alpha[i] = f(p)
     pysgpp.createOperationHierarchisation(grid).doHierarchisation(alpha)
-    pysgpp.VectorFunction
     # direct quadrature
     opQ = pysgpp.createOperationQuadrature(grid)
     res = opQ.doQuadrature(alpha)
