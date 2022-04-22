@@ -75,10 +75,11 @@ def hierarchise(func: Callable, dim: int, level: int):
     logging.info(f"Level: {level}")
     gridGen = grid.getGenerator()
     gridGen.regular(level)
-    logging.info("number of grid points: {}".format(gridStorage.getSize()))
+    gridsize = gridStorage.getSize()
+    logging.info("number of grid points: {}".format(gridsize))
     # create coefficient vector
-    alpha = sg.DataVector(gridStorage.getSize())
-    for i in range(gridStorage.getSize()):
+    alpha = sg.DataVector(gridsize)
+    for i in range(gridsize):
         gp = gridStorage.getPoint(i)
         p = np.array([gp.getStandardCoordinate(j) for j in range(dim)])
         alpha[i] = func(p)
