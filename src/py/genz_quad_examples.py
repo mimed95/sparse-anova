@@ -9,13 +9,13 @@ import pysgpp as sg
 FORMAT = '%(asctime)s :: %(levelname)s :: %(message)s'
 logging.basicConfig(level=logging.INFO, format=FORMAT)
 
-# For reference see the testfunctions at https://www.sfu.ca/~ssurjano/cont.html
+# For reference see the testfunctions at https://www.sfu.ca/~ssurjano/integration.html
 class IntegrationTestFunctions:
     def __init__(self, u=0.5, a=5):
         self.u = u
         self.a = a
 
-    def cont_f(self, x):
+    def continuous_f(self, x):
         """
         using u = (0.5,..,0.5), a_i=5
         """
@@ -54,10 +54,10 @@ class IntegrationTestFunctions:
         using u = (0.5,..,0.5), a_i=5
         """
         return np.prod(
-            [1/(self.a**(-2)+(x[i]-self.u)**2)] for i in range(len(x))
+            [1/(self.a**(-2)+(x[i]-self.u)**2) for i in range(len(x))]
         )
     
-    def discont_f(self, x):
+    def discontinuous_f(self, x):
         """
         using u = (0.5,..,0.5), a_i=5
         """
@@ -89,29 +89,31 @@ def hierarchise(func: Callable, dim: int, level: int):
 
 if __name__ == "__main__":
     Fs = IntegrationTestFunctions()
-    func = Fs.cont_f
-    dim = 3
-    level = 5
-    grid, alpha = hierarchise(func, dim, level)
-    # direct quadrature
-    opQ = sg.createOperationQuadrature(grid)
-    sg_res = opQ.doQuadrature(alpha)
+    for func_name in settings.results2d.keys():
+        logging.info(f"Sparse Grid Integration for {func_name}")
+        func = getattr(Fs, func_name+"_f")
+        dim = 3
+        level = 5
+        grid, alpha = hierarchise(func, dim, level)
+        # direct quadrature
+        opQ = sg.createOperationQuadrature(grid)
+        sg_res = opQ.doQuadrature(alpha)
 
-    opMC = sg.OperationQuadratureMC(grid, 100000)
-    res = opMC.doQuadrature(alpha)
-    logging.info("Monte Carlo value:     {:.6f}".format(res))
-    # Monte Carlo quadrature of a standard parabola
-    res = opMC.doQuadratureFunc(func)
-    logging.info("MC value (f):          {:.6f}".format(res))
-    # Monte Carlo quadrature of error
-    res = opMC.doQuadratureL2Error(func, alpha)
-    logging.info("MC L2-error (f-u)      {:.7f}".format(res))
-    if dim == 2:
-        exact_resf1 = settings.results2d.continous # in d=2
-    elif dim == 3:
-        exact_resf1 = settings.results3d.continous # in d=3
-    else:
-        pass
-    logging.info(f"integral value:  {sg_res:.6f}")
-    logging.info(f"exact integral value: {exact_resf1:.6f}")
-    logging.info(f"Log10 error: {-np.log10(np.abs(sg_res-exact_resf1)):.2f}")
+        opMC = sg.OperationQuadratureMC(grid, 100000)
+        res = opMC.doQuadrature(alpha)
+        logging.info("Monte Carlo value:     {:.6f}".format(res))
+        # Monte Carlo quadrature of a standard parabola
+        res = opMC.doQuadratureFunc(func)
+        logging.info("MC value (f):          {:.6f}".format(res))
+        # Monte Carlo quadrature of error
+        res = opMC.doQuadratureL2Error(func, alpha)
+        logging.info("MC L2-error (f-u)       {:.7f}".format(res))
+        if dim == 2:
+            exact_resf1 = settings.results2d.get(func_name) # in d=2
+        elif dim == 3:
+            exact_resf1 = settings.results3d.get(func_name) # in d=3
+        else:
+            pass
+        logging.info(f"integral value:  {sg_res:.6f}")
+        logging.info(f"exact integral value: {exact_resf1:.6f}")
+        logging.info(f"Log10 error: {-np.log10(np.abs(sg_res-exact_resf1)):.2f}\n")
