@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from re import T
 import numpy as np
 import chaospy as cp
+from numba import jit
 from scipy.stats import norm
 
 
@@ -46,14 +48,23 @@ class EuropeanOption(Option):
         """
         S = self.S_0 * np.exp(
             (self.r - 0.5 * self.sigma**2) * self.T
-            + self.sigma * np.sqrt(self.T).dot(norm.ppf(x))
+            + self.sigma * np.sqrt(self.T)*(norm.ppf(x))
         )
         return S
 
     def payout_func(self):
-        payout = np.maximum(0, self.S_t(self.T) - self.K)
+        payout = np.exp(-self.r*self.T)*np.maximum(0, self.S_t(self.T) - self.K)
         return payout
 
+    def scholes_call(self, St=None, t=0):
+        if St is None and t==0:
+            St=self.S_0
+        tt_maturity = T-t
+        d1 = 1/(self.sigma*np.sqrt(tt_maturity))*(
+            np.log(St/self.K)+(self.r+0.5*self.sigma**2)*tt_maturity
+        )
+        d2 = d1-self.sigma*np.sqrt(tt_maturity)
+        return norm.cdf(d1)*St-norm.cdf(d2)*self.K*np.exp(-self.r*tt_maturity)
 
 @dataclass()
 class AsianOption(Option):
@@ -71,15 +82,19 @@ class AsianOption(Option):
         self.delta_t = self.t_v[0]
         # random walk brownian
         self.A = np.sqrt(self.delta_t) * np.tril(np.ones(self.d))
-
+    
     def S_t(self, x: np.ndarray):
         return self.S_0 * np.exp(
-            (self.r + 0.5 * self.sigma**2) * self.t_v.reshape(self.d, 1)
-            + self.sigma * self.A.dot(norm.ppf(x))
+            (self.r - 0.5 * self.sigma**2) * self.t_v
+            + self.sigma * self.A@(norm.ppf(x))
         )
 
     def payout_func(self, x: np.ndarray):
-        payout = np.maximum(0, (1 / self.d) * np.sum(self.S_t(x), axis=0) - self.K)
+        """Geometric Asian payoff
+        """
+        payout = np.maximum(
+            0, np.prod(x, axis=0)** (1 / self.d) - self.K
+        )
         return payout
 
     def gen_quad(self, lb=0, ub=1, rule=None):
@@ -104,3 +119,27 @@ class AsianOption(Option):
         abscissas, weights = self.gen_quad()
         payout_v = self.payout_func(abscissas)
         return np.dot(weights, payout_v) * np.exp(-self.r * self.T)
+    
+    def scholes_call(self, t=0):
+        t1 = self.T - (
+            self.d*(self.d-1)*(4*self.d+1)*self.delta_t
+        ) / (6*self.d**2)
+        t2 = self.T-0.5*(self.d-1)*self.delta_t
+        beta = (
+            np.log(self.S_0/self.K)+(self.r-0.5*self.sigma**2)*t2
+        ) / (self.sigma*np.sqrt(t1))
+        gamma = np.exp(
+            -self.r*(self.T-t2)-0.5*self.sigma**2*(t2-t1)
+        )
+        return (
+            self.S_0*gamma*norm.cdf(beta+self.sigma*np.sqrt(t1)) -
+            self.K*np.exp(-self.r*self.T)*norm.cdf(beta)
+        )
+        
+
+def sde_body(idx, s, sigma,mu,T,K, samples, batch_size, N=128): 
+    h=T/N
+    z=np.random_normal(shape=(samples, batch_size,1),
+                          stddev=1., dtype=np.float32)
+    s=s + mu *s * h +sigma * s *np.sqrt(h)*z + 0.5 *sigma *s *sigma * ((np.sqrt(h)*z)**2-h)    
+    return s
