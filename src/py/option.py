@@ -82,6 +82,10 @@ class AsianOption(Option):
         self.delta_t = self.t_v[0]
         # random walk brownian
         self.A = np.sqrt(self.delta_t) * np.tril(np.ones(self.d))
+
+        self.M = np.log(self.S_0)+0.5*(self.r-.5*self.sigma**2)*(self.T+self.delta_t)
+        self.Aj = self.A.sum(axis=0)
+        self.gamma_d = self.sigma*self.Aj/self.d
     
     def S_t(self, x: np.ndarray):
         return self.S_0 * np.exp(
@@ -93,7 +97,19 @@ class AsianOption(Option):
         """Geometric Asian payoff
         """
         payout = np.maximum(
-            0, np.prod(x, axis=0)** (1 / self.d) - self.K
+            0, (np.prod(x, axis=0)** (1 / self.d)) - self.K
+        )
+        return payout
+
+    def payout_func_opt(self, x: np.ndarray):
+        """Payout for values x in [0,1]^d
+        """
+        
+
+        payout = np.exp(-self.r*self.T+self.M) * np.maximum(
+            0, np.exp(
+                np.inner(self.gamma_d, norm.ppf(x))-np.exp(-self.M)*self.K
+            )
         )
         return payout
 

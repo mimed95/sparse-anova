@@ -51,7 +51,7 @@ def plotFunction(opEval, surpluses, X):
 
 # We define parameters and perform hierarchization just as in the combigrid example
 dim = 2
-n = 6
+n = 10
 p = 3
 hasBoundary = True
 # test function

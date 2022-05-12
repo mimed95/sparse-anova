@@ -1,6 +1,7 @@
 import pysgpp
 import numpy as np
-
+from profile_integration import GeomAsianPayout
+from option import AsianOption
 # the standard parabola (arbitrary-dimensional)
 
 
@@ -19,12 +20,13 @@ def g(x):
 
 
 if __name__ == "__main__":
-    dim = 2
+    dim = 4
+    f = lambda x: GeomAsianPayout(d=dim).eval_vectorized(x)
     grid = pysgpp.Grid.createLinearGrid(dim)
     gridStorage = grid.getStorage()
     print("dimensionality:        {}".format(dim))
     # create regular grid, level 3
-    level = 3
+    level = 4
     gridGen = grid.getGenerator()
     gridGen.regular(level)
     print("number of grid points: {}".format(gridStorage.getSize()))
