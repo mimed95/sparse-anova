@@ -28,6 +28,7 @@
 # IN WHOLE OR IN PART THE USE, STORAGE OR DISPOSAL OF THE SOFTWARE.
 ##############################################################################################################################################################################
 
+import math
 import numpy as np
 import Tasmanian
 
@@ -38,14 +39,15 @@ def example_03():
     print("Example 3: integrate exp(-x1^2 - x2^2) * cos(x3) * cos(x4)")
     print("           for x1, x2 in [-5,5]; x3, x4 in [-2,3]")
     print("           using different rules and total degree polynomial space\n")
+    dim = 4
 
     def make_grid(iPrecision, sRule):
-        grid = Tasmanian.makeGlobalGrid(4, 0, iPrecision, "qptotal", sRule)
-        grid.setDomainTransform(np.vstack([np.zeros(4), np.ones(4)]).T)
+        grid = Tasmanian.makeGlobalGrid(dim, 0, iPrecision, "qptotal", sRule)
+        grid.setDomainTransform(np.hstack([np.zeros((dim, 1)), np.ones((dim, 1))]))
         return grid
 
     def print_error(grid):
-        fExactIntegral = 1.861816427518323e+00 * 1.861816427518323e+00
+        fExactIntegral = 0.5*np.sqrt(np.pi)*np.exp(-1)*math.erf(1)*np.cos(1)**2
         aPoints = grid.getPoints()
         aWeights = grid.getQuadratureWeights()
 
@@ -81,7 +83,7 @@ def example_05():
     def model(aX):
         return np.ones((1,)) * np.exp(-aX[0] * aX[0]) * np.cos(aX[1])
 
-    iTestGridSize = 33
+    iTestGridSize = 666
     dx = np.linspace(-1.0, 1.0, iTestGridSize) # sample on a uniform grid
     aMeshX, aMeshY = np.meshgrid(dx, dx)
     aTestPoints = np.column_stack([aMeshX.reshape((iTestGridSize**2, 1)),
@@ -107,7 +109,7 @@ def example_05():
     grid_icurved.copyGrid(grid_isotropic)
     grid_surplus.copyGrid(grid_isotropic)
 
-    iNumThreads = 1
+    iNumThreads = -1
     iBudget = 100
     print("{0:>22s}{1:>22s}{2:>22s}{3:>22s}".format("isotropic", "iptotal", "ipcurved", "surplus"))
     print("{0:>8s}{1:>14s}{0:>8s}{1:>14s}{0:>8s}{1:>14s}{0:>8s}{1:>14s}".format("points", "error"))
@@ -162,4 +164,4 @@ def example_05():
 
 
 if (__name__ == "__main__"):
-    example_03()
+    example_05()

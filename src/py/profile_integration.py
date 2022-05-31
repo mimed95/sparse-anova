@@ -82,7 +82,8 @@ if __name__ == "__main__":
     b = np.ones(dim) - aop.epsilon
     
     grid = GaussLegendreGrid(a=a, b=b)
-    f = GeomAsianPayout(d=aop.d)
+    #f = GeomAsianPayout(d=aop.d)
+    f = sparse_payout
     # NEW! define operation which shall be performed in the combination technique
     from sparseSpACE.GridOperation import *
     operation = Integration(f=f, grid=grid, dim=dim, reference_solution=EuropeanOption().scholes_call())
