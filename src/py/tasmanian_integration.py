@@ -1,7 +1,7 @@
 import math
 from typing import Callable
 import numpy as np
-import numba as nb
+from joblib import Parallel, delayed
 import Tasmanian
 import matplotlib.pyplot as plt
 
@@ -11,12 +11,12 @@ from genz_quad_examples import IntegrationTestFunctions
 from configuration.config import settings
 
 
-def make_grid( dim, depth, lb, rb, rule):
+def make_grid( dim, exactness, lb, rb, rule):
     """Creates a sparse grid according to given rules and boundaries.
 
     Args:
         dim (int): Input Dimension.
-        depth (int): Depth of the hierachisation tree.
+        exactness (int): Exactness of the integration.
         lb (array-like): Left boundary. Shape (dim) is recommended.
         rb (array-like): Right boundary. Shape (dim) is recommended.
         rule (str):  One of the local polynomial rules in TASMANIAN docs.
@@ -26,55 +26,32 @@ def make_grid( dim, depth, lb, rb, rule):
         TasmanianSparseGrid: SparseGrid object.
     """
     grid = Tasmanian.makeGlobalGrid(
-        dim, 1, depth, "qptotal", rule
+        dim, 1, exactness, "qptotal", rule
     )
     grid.setDomainTransform(np.vstack([lb, rb]).T)
     return grid
 
-
-def integral_error(grid, f, fExact):
-    aPoints = grid.getPoints()
-    aWeights = grid.getQuadratureWeights()
-    # fApproximateIntegral = np.sum(aWeights * np.apply_along_axis(f, axis=0, arr=aPoints))
-    # fError = np.abs(fApproximateIntegral - fExact)
-    # return "{0:>10d}{1:>10.2e}".format(grid.getNumPoints(), fError)
-    return aWeights, aPoints
-
 #@nb.jit
 def compute_integral(points: np.ndarray, weights: np.ndarray, f: Callable):
-    f_p = np.empty_like(weights)
+    #f_p = np.empty_like(weights)
     f_p = np.apply_along_axis(f, axis=1, arr=points)
     return np.inner(weights, f_p)
 
+
+def parallel_compute_integral(points: np.ndarray, weights: np.ndarray, f: Callable):
+    arr_length = points.shape[0]
+    results = Parallel(n_jobs=16)((f)(points[i, :]) for i in range(arr_length))
+    return np.inner(weights, results)
+    pass
+
 if __name__ == "__main__":
-    dim = 2
-    exact = settings.results2d.continuous
+    dim = 3
+    exact = settings.results3d.continuous
     f = IntegrationTestFunctions().continuous_f
     lb, rb = np.zeros(dim), np.ones(dim)
-
     grid = make_grid(dim, 51, lb, rb, "gauss-patterson")
-    weights, points = integral_error(grid, f, exact)
-    #Tasmanian.loadNeededValues(lambda x, tid: np.ones((1,))*np.exp(-x), grid, 4)
+    weights, points = grid.getQuadratureWeights(), grid.getPoints()
+    approx_integral = compute_integral(points, weights, f)
     print(
-        compute_integral(points, weights, f),
-        exact
+        f"Log10 Integrationsfehler: {np.log10(np.abs(approx_integral-exact)):.2f}"
     )
-    # print(weights.shape, points.shape)
-    # print("               Clenshaw-Curtis      Gauss-Legendre    Gauss-Patterson")
-    # print(" precision    points     error    points     error    points    error")
-    # grid.plotResponse2D()
-    # plt.savefig("/mnt/c/Users/Michael/Pictures/polyresponse.PNG")
-
-    # for prec in range(5, 41, 5):
-    #     print("{0:>10d}{1:1s}{2:1s}{3:1s}".format(
-    #         prec,
-    #         integral_error(
-    #             make_grid(prec, "clenshaw-curtis", dim), lambda x: f(x), exact
-    #         ),
-    #         integral_error(
-    #             make_grid(prec, "gauss-legendre-odd", dim), lambda x: f(x), exact
-    #         ),
-    #         integral_error(
-    #             make_grid(prec, "gauss-patterson", dim), lambda x: f(x), exact)
-    #         )
-    #     )
