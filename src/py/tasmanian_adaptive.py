@@ -32,11 +32,10 @@ import numpy as np
 import Tasmanian
 
 def example_06():
-
-    print("\n---------------------------------------------------------------------------------------------------\n")
-    print("Example 6: interpolate f(x,y) = exp(-5 * x^2) * cos(z), using the rleja rule")
-    print("           employs adaptive construction\n")
-
+    """Example 6: 
+    interpolate f(x,y) = exp(-5 * x^2) * cos(z), using the rleja rule
+    employs adaptive construction
+    """
     iNumInputs = 2
     iNumOutputs = 1
     iNumSamplesPerBatch = 1 # the model is set for a single sample per-batch
@@ -59,13 +58,13 @@ def example_06():
         return np.max(np.abs(aResult - aReferenceValues))
 
     grid = Tasmanian.SparseGrid()
-    grid.makeSequenceGrid(iNumInputs, iNumOutputs, 2, "level", "rleja")
+    grid.makeLocalPolynomialGrid(iNumInputs, iNumOutputs, 5, iOrder=1, sRule="localp")
 
     iNumThreads = 1
 
     print("{0:>8s}{1:>14s}".format("points", "error"))
-    for i in range(4):
-        iBudget = 50 * (i + 1)
+    for i in range(50):
+        iBudget = 100 * (i + 1)
 
         Tasmanian.constructSurplusSurrogate(
             lambda x, tid : model(x),
@@ -73,7 +72,8 @@ def example_06():
             iNumThreads,
             iNumSamplesPerBatch,
             grid,
-            "iptotal", 0
+            fTolerance=1e-5,
+            sRefinementType="iptotal"
         )
         print("{0:>8d}{1:>14s}".format(grid.getNumPoints(),
               "{0:1.4e}".format(testGrid(grid, aTestPoints, aReferenceValues))))
