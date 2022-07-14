@@ -97,7 +97,7 @@ class AsianOption(Option):
         """Geometric Asian payoff
         """
         payout = np.maximum(
-            0, (np.prod(x, axis=0)** (1 / self.d)) - self.K
+            0, (np.prod([x[i] for i in range(len(x))])** (1 / self.d)) - self.K
         )
         return payout
 
@@ -107,9 +107,7 @@ class AsianOption(Option):
         
 
         payout = np.exp(-self.r*self.T+self.M) * np.maximum(
-            0, np.exp(
-                np.inner(self.gamma_d, norm.ppf(x))-np.exp(-self.M)*self.K
-            )
+            0, np.exp(np.inner(self.gamma_d, norm.ppf(x)))-np.exp(-self.M)*self.K
         )
         return payout
 
