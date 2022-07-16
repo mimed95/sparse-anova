@@ -80,6 +80,7 @@ class AsianOption(Option):
     def __post_init__(self):
         self.t_v = np.linspace(0, 1, self.d, endpoint=False) + 1 / self.d
         self.delta_t = self.t_v[0]
+
         # random walk brownian
         self.A = np.sqrt(self.delta_t) * np.tril(np.ones(self.d))
 
@@ -87,13 +88,19 @@ class AsianOption(Option):
         self.Aj = self.A.sum(axis=0)
         self.gamma_d = self.sigma*self.Aj/self.d
     
-    def S_t(self, x: np.ndarray):
+    def S_t(self, x: np.ndarray) -> np.ndarray:
         return self.S_0 * np.exp(
             (self.r - 0.5 * self.sigma**2) * self.t_v
             + self.sigma * self.A@(norm.ppf(x))
         )
 
-    def payout_func(self, x: np.ndarray):
+    def brownian_bridge_generator(self) -> np.ndarray:
+        st = np.mgrid[1:self.d+1, 1:self.d+1]/self.d
+        cov = st.min(axis=0)*self.sigma**2
+        A = np.linalg.cholesky(cov) # Brownian Bridge brownian
+        return A
+
+    def payout_func(self, x: np.ndarray) -> float:
         """Geometric Asian payoff
         """
         payout = np.maximum(
@@ -101,7 +108,7 @@ class AsianOption(Option):
         )
         return payout
 
-    def payout_func_opt(self, x: np.ndarray):
+    def payout_func_opt(self, x: np.ndarray)-> float:
         """Payout for values x in [0,1]^d
         """
         
@@ -110,6 +117,15 @@ class AsianOption(Option):
             0, np.exp(np.inner(self.gamma_d, norm.ppf(x)))-np.exp(-self.M)*self.K
         )
         return payout
+
+    def payout_func_opt_der(self, x: np.ndarray, coordinate=0):
+        """Coordinate-wise derivative of payout_func_opt.
+        """
+        payout_der = np.exp(-self.r*self.T+self.M) * np.maximum(0, np.exp(
+            np.inner(self.gamma_d, norm.ppf(x))
+        )* self.gamma_d[coordinate]/norm.pdf(norm.ppf(x[coordinate])))
+
+        return payout_der
 
     def gen_quad(self, lb=0, ub=1, rule=None):
         """Quadrature node and weight generator.
@@ -134,7 +150,7 @@ class AsianOption(Option):
         payout_v = self.payout_func(abscissas)
         return np.dot(weights, payout_v) * np.exp(-self.r * self.T)
     
-    def scholes_call(self, t=0):
+    def scholes_call(self, t=0) -> float:
         t1 = self.T - (
             self.d*(self.d-1)*(4*self.d+1)*self.delta_t
         ) / (6*self.d**2)
