@@ -48,7 +48,7 @@ def parallel_compute_integral(points: np.ndarray, weights: np.ndarray, f: Callab
 
 
 if __name__ == "__main__":
-    dim = 2
+    dim = 4
     level = 7
     #exact = settings.results3d.discontinuous
     #f = IntegrationTestFunctions().discontinuous_f

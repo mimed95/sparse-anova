@@ -3718,3 +3718,99 @@
 14:57:20,778 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 257
 14:57:20,779 util INFO :: StandardCombi ## Analytic Solution: 13.269676584660886 
 14:57:20,780 util INFO :: StandardCombi ## Difference 0.0001657712862499494: 
+11:25:59,448 util WARNING :: StandardCombi ## Cannot print combischeme of dimension > 2
+11:25:59,449 util WARNING :: StandardCombi ## Cannot print sparse grid of dimension > 3
+11:25:59,450 util INFO :: StandardCombi ## Time used (s):0.39860110900008294
+11:25:59,450 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 142143
+11:25:59,450 util INFO :: StandardCombi ## Analytic Solution: 0.0002085270099729672 
+11:25:59,450 util INFO :: StandardCombi ## Difference 1.9644263784786986e-05: 
+11:25:59,555 util WARNING :: StandardCombi ## Cannot print combischeme of dimension > 2
+11:26:00,16 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 25
+11:26:00,17 util INFO :: SpatiallyAdaptivBase ## Finished refinement
+11:26:00,18 util INFO :: SpatiallyAdaptivBase ## Refined 3 times
+11:26:00,24 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 37
+11:26:00,25 util INFO :: SpatiallyAdaptivBase ## Finished refinement
+11:26:00,26 util INFO :: SpatiallyAdaptivBase ## Refined 6 times
+11:26:00,40 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 57
+11:26:00,41 util INFO :: SpatiallyAdaptivBase ## Finished refinement
+11:26:00,41 util INFO :: SpatiallyAdaptivBase ## Refined 3 times
+11:26:00,51 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 61
+11:26:00,52 util INFO :: SpatiallyAdaptivBase ## Finished refinement
+11:26:00,52 util INFO :: SpatiallyAdaptivBase ## Refined 4 times
+11:26:00,61 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 65
+11:26:00,63 util INFO :: SpatiallyAdaptivBase ## Finished refinement
+11:26:00,63 util INFO :: SpatiallyAdaptivBase ## Refined 12 times
+11:26:00,91 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 92
+11:26:00,95 util INFO :: SpatiallyAdaptivBase ## Finished refinement
+11:26:00,95 util INFO :: SpatiallyAdaptivBase ## Refined 24 times
+11:26:00,156 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 138
+11:26:00,158 util INFO :: SpatiallyAdaptivBase ## Finished refinement
+11:26:00,158 util INFO :: SpatiallyAdaptivBase ## Refined 12 times
+11:26:00,196 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 149
+11:26:00,199 util INFO :: SpatiallyAdaptivBase ## Finished refinement
+11:26:00,200 util INFO :: SpatiallyAdaptivBase ## Refined 16 times
+11:26:00,248 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 161
+11:26:00,252 util INFO :: SpatiallyAdaptivBase ## Finished refinement
+11:26:00,253 util INFO :: SpatiallyAdaptivBase ## Refined 48 times
+11:26:00,314 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 257
+11:26:00,319 util INFO :: SpatiallyAdaptivBase ## Finished refinement
+11:26:00,319 util INFO :: SpatiallyAdaptivBase ## Refined 48 times
+11:26:00,371 util INFO :: SpatiallyAdaptivBase ## Current number of function evaluations 301
+11:26:00,372 util INFO :: SpatiallyAdaptivBase ## Number of refinements: 176
+11:26:00,372 util INFO :: SpatiallyAdaptivBase ## Number of distinct points used during the refinement: 301
+11:26:00,373 util INFO :: SpatiallyAdaptivBase ## Time used adaptive (s): 0.3632175489999554
+11:26:00,373 util INFO :: SpatiallyAdaptivBase ## Final error: 0.0007240455340787211
+11:26:00,534 util WARNING :: StandardCombi ## Cannot print combischeme of dimension > 2
+11:26:00,535 util WARNING :: StandardCombi ## Cannot print sparse grid of dimension > 3
+11:26:00,535 util INFO :: StandardCombi ## Time used (s):0.03261752899993553
+11:26:00,535 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 257
+11:26:00,535 util INFO :: StandardCombi ## Analytic Solution: 13.269676584660886 
+11:26:00,535 util INFO :: StandardCombi ## Difference 0.0001657712862499494: 
+11:26:00,794 util WARNING :: StandardCombi ## Cannot print combischeme of dimension > 2
+11:26:00,795 util WARNING :: StandardCombi ## Cannot print sparse grid of dimension > 3
+11:26:00,795 util INFO :: StandardCombi ## Time used (s):0.20876138899984653
+11:26:00,795 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 945
+11:26:00,795 util INFO :: StandardCombi ## Analytic Solution: 8.327943911732412 
+11:26:00,795 util INFO :: StandardCombi ## Difference 2.6624611907053364: 
+11:26:53,704 util WARNING :: StandardCombi ## Cannot print combischeme of dimension > 2
+11:26:53,704 util WARNING :: StandardCombi ## Cannot print sparse grid of dimension > 3
+11:26:53,705 util INFO :: StandardCombi ## Time used (s):0.2017375830000674
+11:26:53,705 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 945
+11:26:53,705 util INFO :: StandardCombi ## Analytic Solution: 8.327943911732412 
+11:26:53,705 util INFO :: StandardCombi ## Difference 2.6624611907053364: 
+11:27:08,741 util WARNING :: StandardCombi ## Cannot print combischeme of dimension > 2
+11:27:08,742 util WARNING :: StandardCombi ## Cannot print sparse grid of dimension > 3
+11:27:08,742 util INFO :: StandardCombi ## Time used (s):2.445989412000017
+11:27:08,742 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 7681
+11:27:08,742 util INFO :: StandardCombi ## Analytic Solution: 8.327943911732412 
+11:27:08,742 util INFO :: StandardCombi ## Difference 1.0308498848862016: 
+11:28:25,258 util WARNING :: StandardCombi ## Cannot print combischeme of dimension > 2
+11:28:25,258 util WARNING :: StandardCombi ## Cannot print sparse grid of dimension > 3
+11:28:25,259 util INFO :: StandardCombi ## Time used (s):68.23230316100012
+11:28:25,259 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 159489
+11:28:25,259 util INFO :: StandardCombi ## Analytic Solution: 7.804295033974199 
+11:28:25,259 util INFO :: StandardCombi ## Difference 1.127931325420633: 
+11:29:40,734 util WARNING :: StandardCombi ## Cannot print combischeme of dimension > 2
+11:29:40,734 util WARNING :: StandardCombi ## Cannot print sparse grid of dimension > 3
+11:29:40,734 util INFO :: StandardCombi ## Time used (s):0.024461553999799435
+11:29:40,735 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 257
+11:29:40,735 util INFO :: StandardCombi ## Analytic Solution: 13.269676584660886 
+11:29:40,735 util INFO :: StandardCombi ## Difference 0.0001657712862499494: 
+11:29:46,422 util WARNING :: StandardCombi ## Cannot print combischeme of dimension > 2
+11:29:46,422 util WARNING :: StandardCombi ## Cannot print sparse grid of dimension > 3
+11:29:46,423 util INFO :: StandardCombi ## Time used (s):0.006935165999948367
+11:29:46,423 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 33
+11:29:46,423 util INFO :: StandardCombi ## Analytic Solution: 13.269676584660886 
+11:29:46,423 util INFO :: StandardCombi ## Difference 0.0026477085784666343: 
+17:12:03,325 util INFO :: StandardCombi ## Time used (s):0.13697723600125755
+17:12:03,333 util INFO :: StandardCombi ## Number of distinct points used during the refinement (StdCombi): 95
+17:12:22,106 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Current number of function evaluations 7
+17:12:22,108 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Current error: 0.15358798331497764
+17:12:22,108 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Finished refinement
+17:12:22,109 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Refined 8 times
+17:12:22,130 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Current number of function evaluations 29
+17:12:22,133 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Current error: 0.020610179440871325
+17:12:22,134 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Number of refinements: 8
+17:12:22,134 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Number of distinct points used during the refinement: 29
+17:12:22,134 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Time used adaptive (s): 0.04152176800016605
+17:12:22,134 util INFO :: SpatiallyAdaptiveSingleDimensions2 ## Final error: 0.020610179440871325

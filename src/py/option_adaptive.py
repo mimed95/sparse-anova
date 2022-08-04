@@ -29,7 +29,9 @@
 ##############################################################################################################################################################################
 
 import numpy as np
+from scipy.stats import norm
 import Tasmanian
+from option import AsianOption
 
 def example_06():
     """Example 6: 
@@ -39,12 +41,19 @@ def example_06():
     iNumInputs = 2
     iNumOutputs = 1
     iNumSamplesPerBatch = 1 # the model is set for a single sample per-batch
-    def model(aX):
-        # note that the model has to return a 2-D numpy.ndarray
-        return np.ones((1,1)) * np.exp(-5.0 * aX[0, 0] ** 2.0) * np.cos(aX[0, 1])
+    aop = AsianOption(d=iNumInputs)
 
-    iTestGridSize = 50
-    dx = np.linspace(-1.0, 1.0, iTestGridSize) # sample on a uniform grid
+    def model(S_0,sigma,r,T,K, axis=1):
+        # note that the model has to return a 2-D numpy.ndarray
+        tt_maturity = T
+        d1 = 1/(sigma*np.sqrt(tt_maturity))*(
+            np.log(S_0/K)+(r+0.5*sigma**2)*tt_maturity
+        )
+        d2 = d1-sigma*np.sqrt(tt_maturity)
+        return np.ones((1,1)) * norm.cdf(d1)*S_0-norm.cdf(d2)*K*np.exp(-r*tt_maturity)
+    
+    iTestGridSize = 200
+    dx = np.linspace(0.0, 1.0, iTestGridSize) # sample on a uniform grid
     aMeshX, aMeshY = np.meshgrid(dx, dx)
     aTestPoints = np.column_stack([aMeshX.reshape((iTestGridSize**2, 1)),
                                    aMeshY.reshape((iTestGridSize**2, 1))])
