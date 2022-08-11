@@ -33,7 +33,27 @@ from scipy.stats import norm
 import Tasmanian
 from option import AsianOption
 
-def example_06():
+
+#Define training and test interval
+# s_0_l=80.0
+# s_0_r=120.0
+# sigma_l=0.1
+# sigma_r=0.2
+# mu_l=0.02
+# mu_r=0.05
+# T_l=0.9
+# T_r=1.0
+# K_l=109.0
+# K_r=110.0
+
+# s_0 = np.linspace(s_0_l, s_0_r, 100)
+# sigma = np.linspace(sigma_l, sigma_r, 10)
+# mu = np.linspace(mu_l, mu_r, 10)
+# T = np.linspace(T_l, T_r, 10)
+# K = np.linspace(K_l, K_r, 100)
+
+
+def adaptive_option():
     """Example 6: 
     interpolate f(x,y) = exp(-5 * x^2) * cos(z), using the rleja rule
     employs adaptive construction
@@ -43,21 +63,21 @@ def example_06():
     iNumSamplesPerBatch = 1 # the model is set for a single sample per-batch
     aop = AsianOption(d=iNumInputs)
 
-    def model(S_0,sigma,r,T,K, axis=1):
+    def model(X):
         # note that the model has to return a 2-D numpy.ndarray
-        tt_maturity = T
-        d1 = 1/(sigma*np.sqrt(tt_maturity))*(
-            np.log(S_0/K)+(r+0.5*sigma**2)*tt_maturity
-        )
-        d2 = d1-sigma*np.sqrt(tt_maturity)
-        return np.ones((1,1)) * norm.cdf(d1)*S_0-norm.cdf(d2)*K*np.exp(-r*tt_maturity)
+        """Payout for values x in [0,1]^d
+        """
+        assert X.shape == (1, aop.d)
+
+        payout = aop.payout_func_opt(X)
+        return np.ones((1,1)) * payout
     
-    iTestGridSize = 200
-    dx = np.linspace(0.0, 1.0, iTestGridSize) # sample on a uniform grid
+    iTestGridSize = 33
+    dx = np.linspace(0.001, .999, iTestGridSize) # sample on a uniform grid
     aMeshX, aMeshY = np.meshgrid(dx, dx)
     aTestPoints = np.column_stack([aMeshX.reshape((iTestGridSize**2, 1)),
                                    aMeshY.reshape((iTestGridSize**2, 1))])
-    aReferenceValues = np.exp(-5.0 * aTestPoints[:,0]**2) * np.cos(aTestPoints[:,1])
+    aReferenceValues = np.apply_along_axis(aop.payout_func_opt, 1, aTestPoints)
     aReferenceValues = aReferenceValues.reshape((aReferenceValues.shape[0], 1))
 
     def testGrid(grid, aTestPoints, aReferenceValues):
@@ -72,7 +92,7 @@ def example_06():
     iNumThreads = 1
 
     print("{0:>6s}{1:>14s}".format("points", "error"))
-    for i in range(50):
+    for i in range(10):
         iBudget = 100 * (i + 1)
 
         Tasmanian.constructSurplusSurrogate(
@@ -89,4 +109,4 @@ def example_06():
 
 
 if (__name__ == "__main__"):
-    example_06()
+    adaptive_option()
