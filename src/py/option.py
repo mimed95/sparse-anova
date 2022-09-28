@@ -85,8 +85,10 @@ class AsianOption(Option):
         self.A = np.sqrt(self.delta_t) * np.tril(np.ones(self.d))
 
         self.M = np.log(self.S_0)+0.5*(self.r-.5*self.sigma**2)*(self.T+self.delta_t)
-        self.Aj = self.A.sum(axis=0)
-        self.gamma_d = self.sigma*self.Aj/self.d
+        self.denom = 1/((2*np.arange(self.d)+1)**2*np.pi**2)
+        # gamma_d coefficients in PCA case
+        self.gamma_d = 4*self.sigma*np.sqrt(2*self.T)*self.denom + \
+        3*self.sigma*np.sqrt(2*self.T)*self.denom/self.d
     
     def S_t(self, x: np.ndarray) -> np.ndarray:
         return self.S_0 * np.exp(
@@ -109,14 +111,12 @@ class AsianOption(Option):
         return payout
 
     def payout_func_opt(self, x: np.ndarray)-> float:
-        """Payout for values x in [0,1]^d
+        """Payout array for array x with values in [0,1]^d without pre-factor
         """
-        
-
-        payout = np.exp(-self.r*self.T+self.M) * np.maximum(
-            0, np.exp(np.inner(self.gamma_d, norm.ppf(x)))-np.exp(-self.M)*self.K
-        )
-        return payout
+        payout_v = np.maximum(
+        np.exp(norm.ppf(x)@self.gamma_d) - np.exp(-self.M)*self.K, 0
+    )
+        return payout_v
 
     def payout_func_opt_der(self, x: np.ndarray, coordinate=0):
         """Coordinate-wise derivative of payout_func_opt.
