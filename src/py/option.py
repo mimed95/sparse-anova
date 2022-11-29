@@ -76,6 +76,7 @@ class AsianOption(Option):
     d: int = 16
     level: int = 3
     epsilon: float = 1e-10
+    random_walk: bool = False
 
     def __post_init__(self):
         self.t_v = np.linspace(0, 1, self.d, endpoint=False) + 1 / self.d
@@ -89,6 +90,9 @@ class AsianOption(Option):
         # gamma_d coefficients in PCA case
         self.gamma_d = 4*self.sigma*np.sqrt(2*self.T)*self.denom + \
         3*self.sigma*np.sqrt(2*self.T)*self.denom/self.d
+        if self.random_walk:
+            self.gamma_d = (-np.arange(1,9)+self.d+1)*self.sigma*np.sqrt(T)/(self.d*np.sqrt(self.d))
+             
     
     def S_t(self, x: np.ndarray) -> np.ndarray:
         return self.S_0 * np.exp(
